@@ -1,27 +1,27 @@
 // src/App.jsx
-import React, { useState } from 'react';
-import Menu from './components/Menu';
-import Agregar from './components/Agregar';
-import Buscar from './components/Buscar';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import BuscarInstrumento from "./pages/BuscarInstrumento";
+import BuscarFbm from "./pages/BuscarFbm";
 
-/**
- * Componente principal.
- * Muestra el menú y la vista actual seleccionada: Buscar o Agregar.
- */
 function App() {
-  const [vista, setVista] = useState('buscar'); // 'buscar' o 'agregar'
-
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Arquitectura IAS</h1>
+    <Router>
+      <div>
+        <h1>Sistema DCS Foxboro</h1>
+        <nav>
+          <ul>
+            <li><Link to="/buscar-instrumento">Buscar Instrumento</Link></li>
+            <li><Link to="/buscar-fbm">Buscar FBM</Link></li>
+          </ul>
+        </nav>
 
-      {/* Menú de navegación */}
-      <Menu setVista={setVista} vistaActiva={vista} />
-
-      {/* Vista dinámica según selección */}
-      {vista === 'agregar' && <Agregar />}
-      {vista === 'buscar' && <Buscar />}
-    </div>
+        <Routes>
+          <Route path="/buscar-instrumento" element={<BuscarInstrumento />} />
+          <Route path="/buscar-fbm" element={<BuscarFbm />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
