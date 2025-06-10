@@ -1,31 +1,47 @@
+// src/components/InstrumentoResultado.jsx
+
 import React from "react";
-import { getEnclosureImagePath } from "../utils/getEnclosureImage";
 
-const InstrumentoResultado = ({ data }) => {
-  if (!data) return null;
+/**
+ * Componente visual para mostrar el resultado de una búsqueda de instrumento.
+ * Incluye información del instrumento, FBM asociada, CP asociado y punto de conexión.
+ */
+const InstrumentoResultado = ({ instrumento }) => {
+  // Validación por si no hay datos
+  if (!instrumento || !instrumento.fbm || !instrumento.cp) {
+    return <div className="alert alert-warning">Instrumento no encontrado o datos incompletos.</div>;
+  }
 
-  const enclosurePath = getEnclosureImagePath(data.cp.ubicacion); // CP.ubicacion es el enclosure
   return (
-    <div>
-      <h3>Instrumento</h3>
-      <p><strong>Nombre:</strong> {data.nombre}</p>
-      <p><strong>Tipo:</strong> {data.tipo}</p>
+    <div className="card mt-4">
+      <div className="card-header bg-primary text-white">
+        🔍 Resultado de la búsqueda de instrumento
+      </div>
+      <div className="card-body">
+        {/* Datos del instrumento */}
+        <h5 className="card-title">Instrumento: {instrumento.nombre}</h5>
+        <p className="card-text"><strong>Tipo:</strong> {instrumento.tipo}</p>
+        <p className="card-text"><strong>Punto:</strong> {instrumento.punto || "No especificado"}</p>
 
-      <h4>FBM</h4>
-      <p><strong>Número:</strong> {data.fbm.numero}</p>
-      <p><strong>Ubicación (enclosure):</strong> {data.fbm.ubicacion}</p>
+        <hr />
 
-      <h4>CP</h4>
-      <p><strong>Número:</strong> {data.cp.numero}</p>
-      <p><strong>Tipo:</strong> {data.cp.tipo}</p>
-      <p><strong>Ubicación (enclosure):</strong> {data.cp.ubicacion}</p>
+        {/* Datos de la FBM */}
+        <h6 className="card-subtitle mb-2 text-muted">FBM asociada</h6>
+        <p className="card-text">
+          <strong>Número:</strong> {instrumento.fbm.numero}<br />
+          <strong>Ubicación (Enclosure):</strong> {instrumento.fbm.ubicacion}
+        </p>
 
-      {enclosurePath && (
-        <div>
-          <h4>Imagen del Enclosure</h4>
-          <img src={enclosurePath} alt="Enclosure" width="400" />
-        </div>
-      )}
+        <hr />
+
+        {/* Datos del CP */}
+        <h6 className="card-subtitle mb-2 text-muted">Controlador (CP)</h6>
+        <p className="card-text">
+          <strong>Número:</strong> {instrumento.cp.numero}<br />
+          <strong>Tipo:</strong> {instrumento.cp.tipo}<br />
+          <strong>Ubicación:</strong> {instrumento.cp.ubicacion}
+        </p>
+      </div>
     </div>
   );
 };

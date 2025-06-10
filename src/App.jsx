@@ -50,3 +50,4 @@ function App() {
 }
 
 export default App;
+// Para correr el frontEnd hay que correr npm run dev

@@ -8,7 +8,7 @@ import { getEnclosureImagePath } from "../utils/getEnclosureImage";
 const FbmResultado = ({ data }) => {
   if (!data) return null;
 
-  const enclosurePath = getEnclosureImagePath(data.cp.ubicacion); // <--- AHORA DEFINIDA
+  const enclosurePath = getEnclosureImagePath(data.cp.ubicacion); 
 
   return (
     <div>
