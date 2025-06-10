@@ -1,31 +1,59 @@
 // src/components/Agregar.jsx
-import React, { useState } from 'react';
-import FormCP from './FormCP';
-import FormFBM from './FormFBM';
-import FormInstrumento from './FormInstrumento';
+
+import React, { useState } from "react";
+import FormCP from "./FormCP";
+import FormFBM from "./FormFBM";
+import FormInstrumento from "./FormInstrumento";
 
 /**
- * Vista para agregar entidades: CP, FBM, Instrumento.
- * Usa tabs para seleccionar el tipo de formulario.
+ * Componente contenedor con Tabs de Bootstrap para mostrar:
+ * - Formulario de alta de CP
+ * - Formulario de alta de FBM
+ * - Formulario de alta de Instrumento
  */
-function Agregar() {
-  const [tipo, setTipo] = useState('cp'); // 'cp', 'fbm' o 'instrumento'
+const Agregar = () => {
+  const [activeTab, setActiveTab] = useState("cp"); // Tab activo: 'cp' | 'fbm' | 'instrumento'
 
   return (
-    <div>
-      <h2>Agregar nuevo elemento</h2>
+    <div className="container mt-4">
+      <h2 className="mb-4">➕ Alta de elementos</h2>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <button onClick={() => setTipo('cp')} style={{ marginRight: '1rem' }}>CP</button>
-        <button onClick={() => setTipo('fbm')} style={{ marginRight: '1rem' }}>FBM</button>
-        <button onClick={() => setTipo('instrumento')}>Instrumento</button>
-      </div>
+      {/* Navegación por Tabs de Bootstrap */}
+      <ul className="nav nav-tabs mb-3">
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "cp" ? "active" : ""}`}
+            onClick={() => setActiveTab("cp")}
+          >
+            Controlador (CP)
+          </button>
+        </li>
 
-      {tipo === 'cp' && <FormCP onCPAgregado={() => {}} />}
-      {tipo === 'fbm' && <FormFBM />}
-      {tipo === 'instrumento' && <FormInstrumento />}
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "fbm" ? "active" : ""}`}
+            onClick={() => setActiveTab("fbm")}
+          >
+            Tarjeta (FBM)
+          </button>
+        </li>
+
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "instrumento" ? "active" : ""}`}
+            onClick={() => setActiveTab("instrumento")}
+          >
+            Instrumento
+          </button>
+        </li>
+      </ul>
+
+      {/* Contenido de cada tab */}
+      {activeTab === "cp" && <FormCP />}
+      {activeTab === "fbm" && <FormFBM />}
+      {activeTab === "instrumento" && <FormInstrumento />}
     </div>
   );
-}
+};
 
 export default Agregar;

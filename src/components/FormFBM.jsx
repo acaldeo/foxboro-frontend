@@ -1,96 +1,107 @@
 // src/components/FormFBM.jsx
-import React, { useState, useEffect } from 'react';
-import { useToast } from '../context/ToastContext';
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 /**
- * Formulario para crear una nueva FBM asociada a un CP existente
+ * Formulario para dar de alta una FBM.
+ * Estilizado con Bootstrap y sin dependencias externas.
  */
-function FormFBM() {
-  const [numero, setNumero] = useState('');
-  const [cantidadPuntos, setCantidadPuntos] = useState(16);
-  const [cpId, setCpId] = useState('');
-  const [ubicacion, setUbicacion] = useState('');
-  const [cps, setCps] = useState([]);
-  const { showToast } = useToast(); // Importamos sistema de toast
+const FormFBM = () => {
+  const [numero, setNumero] = useState("");
+  const [cantidadPuntos, setCantidadPuntos] = useState("");
+  const [cpId, setCpId] = useState("");
+  const [ubicacion, setUbicacion] = useState("");
 
-  // Cargar CPs disponibles para el selector
+  const [cps, setCps] = useState([]);
+
   useEffect(() => {
-    fetch('http://localhost:3000/api/cps')
-      .then(res => res.json())
-      .then(data => setCps(data));
+    axios.get("http://localhost:3000/api/cps")
+      .then(res => setCps(res.data))
+      .catch(err => console.error("Error cargando CPs:", err));
   }, []);
 
-  // Enviar FBM al backend
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const nuevaFBM = {
-      numero,
-      cantidad_puntos: parseInt(cantidadPuntos),
-      cp_id: parseInt(cpId),
-      ubicacion
-    };
-
-    fetch('http://localhost:3000/api/fbms', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(nuevaFBM)
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('Error al crear FBM');
-        return res.json();
-      })
-      .then(() => {
-        setNumero('');
-        setCantidadPuntos(16);
-        setUbicacion('');
-        setCpId('');
-        showToast('FBM creada correctamente', 'success');
-      })
-      .catch(err => {
-        console.error(err);
-        showToast('Error al crear FBM', 'error');
+    try {
+      await axios.post("http://localhost:3000/api/fbms", {
+        numero,
+        cantidad_puntos: cantidadPuntos,
+        cp_id: cpId,
+        ubicacion
       });
+
+      alert("✅ FBM creada correctamente");
+
+      setNumero("");
+      setCantidadPuntos("");
+      setCpId("");
+      setUbicacion("");
+    } catch (error) {
+      console.error("Error al crear FBM:", error);
+      alert("❌ Error al crear FBM");
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Agregar nueva FBM</h3>
+    <div className="card p-4 mb-4">
+      <h5 className="card-title mb-3">➕ Agregar FBM</h5>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label className="form-label">Número</label>
+          <input
+            type="text"
+            className="form-control"
+            value={numero}
+            onChange={(e) => setNumero(e.target.value)}
+            required
+          />
+        </div>
 
-      <div>
-        <label>Número:</label><br />
-        <input value={numero} onChange={(e) => setNumero(e.target.value)} required />
-      </div>
+        <div className="mb-3">
+          <label className="form-label">Cantidad de puntos</label>
+          <input
+            type="number"
+            className="form-control"
+            value={cantidadPuntos}
+            onChange={(e) => setCantidadPuntos(e.target.value)}
+            required
+          />
+        </div>
 
-      <div>
-        <label>Cantidad de puntos:</label><br />
-        <input
-          type="number"
-          value={cantidadPuntos}
-          onChange={(e) => setCantidadPuntos(e.target.value)}
-          min={1}
-          required
-        />
-      </div>
+        <div className="mb-3">
+          <label className="form-label">Controlador (CP) asociado</label>
+          <select
+            className="form-select"
+            value={cpId}
+            onChange={(e) => setCpId(e.target.value)}
+            required
+          >
+            <option value="">-- Seleccionar CP --</option>
+            {cps.map(cp => (
+              <option key={cp.id} value={cp.id}>
+                {cp.numero} ({cp.tipo})
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <div>
-        <label>CP asociado:</label><br />
-        <select value={cpId} onChange={(e) => setCpId(e.target.value)} required>
-          <option value="">Seleccionar CP</option>
-          {cps.map(cp => (
-            <option key={cp.id} value={cp.id}>{cp.numero}</option>
-          ))}
-        </select>
-      </div>
+        <div className="mb-3">
+          <label className="form-label">Ubicación (Enclosure)</label>
+          <input
+            type="text"
+            className="form-control"
+            value={ubicacion}
+            onChange={(e) => setUbicacion(e.target.value)}
+            required
+          />
+        </div>
 
-      <div>
-        <label>Ubicación:</label><br />
-        <input value={ubicacion} onChange={(e) => setUbicacion(e.target.value)} required />
-      </div>
-
-      <button type="submit" style={{ marginTop: '1rem' }}>Guardar FBM</button>
-    </form>
+        <button type="submit" className="btn btn-primary">Crear FBM</button>
+      </form>
+    </div>
   );
-}
+};
 
 export default FormFBM;

@@ -1,83 +1,100 @@
 // src/components/FormInstrumento.jsx
-import React, { useState, useEffect } from 'react';
-import { useToast } from '../context/ToastContext';
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 /**
- * Formulario para agregar un nuevo instrumento
- * Requiere seleccionar una FBM existente
+ * Formulario para agregar un instrumento.
+ * Utiliza Bootstrap CSS para estilos.
  */
-function FormInstrumento() {
-  const [nombre, setNombre] = useState('');
-  const [tipo, setTipo] = useState('');
-  const [fbmId, setFbmId] = useState('');
+const FormInstrumento = () => {
+  // Estado local para los campos del formulario
+  const [nombre, setNombre] = useState("");
+  const [tipo, setTipo] = useState("");
+  const [fbmId, setFbmId] = useState("");
   const [fbms, setFbms] = useState([]);
-  const { showToast } = useToast(); // Importamos el toast
 
-  // Cargar FBMs disponibles para el selector
+  // Al cargar el componente, obtener todas las FBMs disponibles
   useEffect(() => {
-    fetch('http://localhost:3000/api/fbms')
-      .then(res => res.json())
-      .then(data => setFbms(data));
+    axios.get("http://localhost:3000/api/fbms")
+      .then(res => setFbms(res.data))
+      .catch(err => console.error("Error al cargar FBMs:", err));
   }, []);
 
-  // Enviar instrumento
-  const handleSubmit = (e) => {
+  // Manejo del envío del formulario
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const nuevoInstrumento = {
-      nombre,
-      tipo,
-      fbm_id: parseInt(fbmId)
-    };
-
-    fetch('http://localhost:3000/api/instrumentos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(nuevoInstrumento)
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('Error al crear instrumento');
-        return res.json();
-      })
-      .then(() => {
-        setNombre('');
-        setTipo('');
-        setFbmId('');
-        showToast('Instrumento creado correctamente', 'success');
-      })
-      .catch(err => {
-        console.error(err);
-        showToast('Error al crear instrumento', 'error');
+    try {
+      await axios.post("http://localhost:3000/api/instrumentos", {
+        nombre,
+        tipo,
+        fbm_id: fbmId,
       });
+
+      alert("✅ Instrumento creado correctamente");
+
+      // Limpiar el formulario
+      setNombre("");
+      setTipo("");
+      setFbmId("");
+    } catch (error) {
+      console.error("Error al crear instrumento:", error);
+      alert("❌ Error al crear instrumento");
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Agregar nuevo instrumento</h3>
+    <div className="card p-4 mb-4">
+      <h5 className="card-title mb-3">➕ Agregar Instrumento</h5>
+      <form onSubmit={handleSubmit}>
+        {/* Campo: Nombre */}
+        <div className="mb-3">
+          <label className="form-label">Nombre</label>
+          <input
+            type="text"
+            className="form-control"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            required
+          />
+        </div>
 
-      <div>
-        <label>Nombre:</label><br />
-        <input value={nombre} onChange={(e) => setNombre(e.target.value)} required />
-      </div>
+        {/* Campo: Tipo */}
+        <div className="mb-3">
+          <label className="form-label">Tipo</label>
+          <input
+            type="text"
+            className="form-control"
+            value={tipo}
+            onChange={(e) => setTipo(e.target.value)}
+            required
+          />
+        </div>
 
-      <div>
-        <label>Tipo:</label><br />
-        <input value={tipo} onChange={(e) => setTipo(e.target.value)} required />
-      </div>
+        {/* Campo: FBM asociada */}
+        <div className="mb-3">
+          <label className="form-label">FBM asociada</label>
+          <select
+            className="form-select"
+            value={fbmId}
+            onChange={(e) => setFbmId(e.target.value)}
+            required
+          >
+            <option value="">-- Seleccionar FBM --</option>
+            {fbms.map((fbm) => (
+              <option key={fbm.id} value={fbm.id}>
+                {fbm.numero} ({fbm.ubicacion})
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <div>
-        <label>FBM asociada:</label><br />
-        <select value={fbmId} onChange={(e) => setFbmId(e.target.value)} required>
-          <option value="">Seleccionar FBM</option>
-          {fbms.map(fbm => (
-            <option key={fbm.id} value={fbm.id}>{fbm.numero}</option>
-          ))}
-        </select>
-      </div>
-
-      <button type="submit" style={{ marginTop: '1rem' }}>Guardar Instrumento</button>
-    </form>
+        {/* Botón de envío */}
+        <button type="submit" className="btn btn-primary">Crear Instrumento</button>
+      </form>
+    </div>
   );
-}
+};
 
 export default FormInstrumento;

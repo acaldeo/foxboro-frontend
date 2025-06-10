@@ -1,7 +1,25 @@
-// Mapea enclosures conocidos con sus rutas relativas a public/
-
+// Este archivo se genera automáticamente con buildImgMap.js
 export const enclosureImageMap = {
+  "049-ENC-005": "/img/ENCL_049_005.png",
   "032-ENC-001": "/img/almidon_modificado/ENCL_032_001.jpg",
-  "023-ENC-004": "/img/caldera_enclosure/023_enclo004.jpg",
-  // Agregá todos los que tengas disponibles...
+  "023-ENC-004": "/img/caldera_enclosure/ENCL_023_004.png",
+  "023-ENC-038": "/img/caldera_sala_ias/ENCL_023_038.png",
+  "053-ENC-012": "/img/descar_soda_acido/ENCL_053_012.png",
+  "058-ENC-003": "/img/edificio_invertose/ENCL_058_003.png",
+  "058-ENC-002": "/img/lechox_mixto_invertose/ENCL_058_002.png",
+  "005-ENC-021": "/img/molienda/ENCL_005_021.png",
+  "058-ENC-037": "/img/sala_electrica_invertose/BK/ENCL_058_037.jpg",
+  "058-ENC-006": "/img/sala_electrica_invertose/ENCL_058_006.png",
+  "058-ENC-037": "/img/sala_electrica_invertose/ENCL_058_037.png",
+  "053-ENC-032": "/img/sala_ias_baradero2/ENCL_053_032.png",
+  "058-ENC-035": "/img/sala_nueva_ias_invertose/ENCL_058_035.png",
+  "058-ENC-036": "/img/sala_nueva_ias_invertose/ENCL_058_036.png",
+  "053-ENC-013": "/img/sobre_submarino/ENCL_053_013.png",
+  "053-ENC-014": "/img/sobre_submarino/ENCL_053_014.png",
+  "053-ENC-015": "/img/sobre_submarino/ENCL_053_015.png",
+  "053-ENC-016": "/img/sobre_submarino/ENCL_053_016.png",
+  "053-ENC-033": "/img/sobre_submarino/ENCL_053_033.png",
+  "053-ENC-034": "/img/sobre_submarino/ENCL_053_034.png",
+  "029-ENC-023": "/img/tanques_de_isomerizacion/ENCL_029_023.png",
+  "029-ENC-024": "/img/tanques_de_isomerizacion/ENCL_029_024.png",
 };
